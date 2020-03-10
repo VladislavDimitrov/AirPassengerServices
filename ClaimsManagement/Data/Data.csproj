@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200307140450_Initial.cs" />
+    <Compile Remove="Migrations\20200307140450_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200308133525_Initial.cs" />
+    <Compile Remove="Migrations\20200308133525_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200309121940_CLaimEntityUpdate.cs" />
+    <Compile Remove="Migrations\20200309121940_CLaimEntityUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200309125250_ClaimEntityCreatedAtPropUpdate.cs" />
+    <Compile Remove="Migrations\20200309125250_ClaimEntityCreatedAtPropUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200309125848_ClaimEntityCreatedAtPropUpdate.cs" />
+    <Compile Remove="Migrations\20200309125848_ClaimEntityCreatedAtPropUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200309130223_ClaimEntityCreatedAtPropUpdate.cs" />
+    <Compile Remove="Migrations\20200309130223_ClaimEntityCreatedAtPropUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200309130430_ClaimEntityCreatedAtPropUpdate.cs" />
+    <Compile Remove="Migrations\20200309130430_ClaimEntityCreatedAtPropUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200309130547_ClaimEntityCreatedAtPropUpdate.cs" />
+    <Compile Remove="Migrations\20200309130547_ClaimEntityCreatedAtPropUpdate.Designer.cs" />
+    <Compile Remove="Migrations\20200309130907_ClaimEntityCreatedAtPropUpdate.cs" />
+    <Compile Remove="Migrations\20200309130907_ClaimEntityCreatedAtPropUpdate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.2" />
+  </ItemGroup>
+
+</Project>
