@@ -14,7 +14,6 @@ namespace Web.Models.Claims
         public DateTime To { get; set; }
         public string Airline { get; set; }
         public int FlightNumber { get; set; }
-        public List<ClaimDto> Claims { get; set; } = new List<ClaimDto>(100);
-
+        public List<ClaimDto> Claims { get; set; } = new List<ClaimDto>(64);
     }
 }

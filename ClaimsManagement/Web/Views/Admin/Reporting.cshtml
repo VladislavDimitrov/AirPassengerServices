@@ -1,0 +1,72 @@
+﻿@model ReportViewModel
+@{
+    ViewData["Title"] = "Reporting";
+}
+
+<div class="container">
+    <h3> Reporting</h3>
+    <form asp-controller="Admin" asp-action="Filter" method="get">
+        <p> Filters:</p>
+        <div class="row">
+            <div class="form-group col-5">
+                <label class="control-label"> Airline</label> <br>
+                <select asp-for="Airline" class="form-control btn-primary">
+                    <option value=""> Select Option</option>
+                    <option value="Fast Fly"> Fast Fly</option>
+                    <option value="Safe Ways"> Safe Ways</option>
+                    <option value="Quick Travels"> Quick Travels</option>
+                    <option value="Happy Air"> Happy Air</option>
+                    <option value="Costly Air"> Costly Air</option>
+                    <option value="Great Flies"> Great Flies</option>
+                </select>
+            </div>
+            <div class="form-group col-5">
+                <label class="control-label"> Flight Number</label>
+                <input class="form-control" type="text" asp-for="FlightNumber" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-5">
+                <label class="control-label"> From</label>
+                <input class="form-control" type="date" value="" asp-for="From" />
+            </div>
+            <div class="form-group col-5">
+                <label class="control-label"> To</label>
+                <input class="form-control" type="date" value="" asp-for="To" />
+            </div>
+        </div>
+        <button class="btn btn-primary"> Apply <i class="fa fa-filter"> </i> </button>
+    </form>
+    <br>
+    <div asp-validation-summary="ModelOnly" class="text-danger"> </div>
+    <br>
+@if (Model != null)
+{
+    @if (!(Model.Claims.Count == 0))
+    {
+
+        <table class="table table-hover">
+            <tr style="background-color:lightblue">
+                <th> Created At</th>
+                <th> Title</th>
+                <th> Airline</th>
+                <th> Category</th>
+                <th> Flight Number</th>
+                <th> User</th>
+            </tr>
+            @foreach (var claim in Model.Claims)
+            {
+                <tr>
+                    <td>@claim.CreatedAt </td>
+                    <td>@claim.Title </td>
+                    <td>@claim.Airline </td>
+                    <td>@claim.Category </td>
+                    <td>@claim.FlightNumber </td>
+                    <td>@claim.User.UserName </td>
+                    <td> <a asp-controller="Claims" asp-action="Details" asp-route-id="@claim.Id" class=" btn btn-primary"> Details</a> </td>
+                </tr>
+            }
+        </table>
+    }
+}
+</div>

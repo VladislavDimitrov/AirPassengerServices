@@ -1,13 +1,17 @@
 ﻿using Data.DTOs;
 using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Web.Models.Claims;
 
 namespace Web.Controllers
 {
+    [Authorize(Roles = "Member")]
     public class ClaimsController : Controller
     {
         private readonly IClaimServices claimServices;
@@ -31,6 +35,20 @@ namespace Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (claimDto.FlightDate.Year < 2000)
+                {
+                    ModelState.AddModelError(string.Empty, $"Please enter a valid FLight Date. Air Passenger Services does not handle claims regarding flights before the 2000-th year.");
+
+                    return View(claimDto);
+                }
+
+                if (claimDto.Category != "Voluntary Cancellation" && claimDto.FlightDate > DateTime.UtcNow)
+                {
+                    ModelState.AddModelError(string.Empty, $"Only claims in the category \"Voluntary Cancellation\" can be submitted with Flight Date that is in the future.");
+
+                    return View(claimDto);
+                }
+
                 claimDto.CountryCode = claimDto.CountryCode.ToUpper();
                 if (!phoneNumberServices.IsValidNumber(claimDto.PhoneNumber, claimDto.CountryCode))
                 {
@@ -38,9 +56,10 @@ namespace Web.Controllers
 
                     return View(claimDto);
                 }
-                
+
                 claimDto.User = await userManager.GetUserAsync(HttpContext.User);
                 await claimServices.CreateAsync(claimDto);
+                ViewData["Message"] = "Success";
 
                 return View();
             }
@@ -57,34 +76,44 @@ namespace Web.Controllers
 
         public async Task<IActionResult> Update(ClaimDto claimDto)
         {
-            claimDto.User = await userManager.GetUserAsync(HttpContext.User);
-            await claimServices.UpdateAsync(claimDto);
-
-            return View("Details", claimDto);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> Reporting()
-        {
-            var vm = new ReportViewModel();
-            vm.Claims = await claimServices.Get20LatestClaimsAsync();
-
-            return View(vm);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Filter(ReportViewModel vm)
-        {
-            var claimsResult = await claimServices.FilterByMultipleCriteriaAsync(vm.Airline, vm.FlightNumber, vm.From, vm.To);
-
-            if (claimsResult.Count == 0)
+            if (claimDto.FlightDate.Year < 2000)
             {
-                ModelState.AddModelError(string.Empty, $"No results to display.");
+                ModelState.AddModelError(string.Empty, $"Please enter a valid FLight Date. Air Passenger Services does not handle claims regarding flights before the 2000-th year.");
 
-                return View();
+                return View(claimDto);
             }
 
-            vm.Claims = claimsResult;
+            claimDto.User = await userManager.GetUserAsync(HttpContext.User);
+            if (claimDto.Category != "Voluntary Cancellation" && claimDto.FlightDate > DateTime.UtcNow)
+            {
+                ModelState.AddModelError(string.Empty, $"Only claims in the category \"Voluntary Cancellation\" can be submitted with Flight Date that is in the future.");
+
+                return View("Details", claimDto);
+            }
+
+            claimDto.CountryCode = claimDto.CountryCode.ToUpper();
+            if (!phoneNumberServices.IsValidNumber(claimDto.PhoneNumber, claimDto.CountryCode))
+            {
+                ModelState.AddModelError(string.Empty, $"Invalid phone number for {claimDto.CountryCode}. You claim was not updated.");
+
+                return View("Details", claimDto);
+            }
+
+            var updatedClaim = await claimServices.UpdateAsync(claimDto);
+            ViewData["Message"] = "Success";
+
+            return View("Details", updatedClaim);
+        }
+
+        public async Task<IActionResult> UserClaims()
+        {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            var claims = await claimServices.GetClaimsByUserAsync(user);
+            if (claims.Count() == 0)
+                return View();
+
+            var vm = new UserClaimsViewModel();
+            vm.Claims = claims;
 
             return View(vm);
         }

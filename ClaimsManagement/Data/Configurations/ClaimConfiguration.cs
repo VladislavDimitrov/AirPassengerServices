@@ -31,8 +31,7 @@ namespace Data
 
             builder
               .Property(c => c.CreatedAt)
-              .ValueGeneratedOnAdd();
-              //.IsRequired();
+              .IsRequired();
 
             builder
               .Property(c => c.Airline)

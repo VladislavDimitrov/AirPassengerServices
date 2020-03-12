@@ -3,25 +3,31 @@
     ViewData["Title"] = "Create";
 }
 
+<div class="container">
 <h3>Submit a Complaint</h3>
-<div>
+    <br>
+    <p class="text-danger">Fields marked with * are required</p>
     <form asp-controller="Claims" asp-action="Create" method="post" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        @if (ViewData["Message"] != null)
+        {
+            <p class="text-success">Claim created successfully!</p>
+        }
         <div class="row">
             <div class="form-group col-5">
-                <label asp-for="Title" class="control-label"></label>
+                <label asp-for="Title" class="control-label">Title *</label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group col-5">
-                <label asp-for="Category" class="control-label"></label><br>
+                <label asp-for="Category" class="control-label">Category *</label><br>
                 <select asp-for="Category" class="form-control btn-primary">
+                    <option value=""> Select Option</option>
                     <option value="Baggage Delay">Baggage Delay</option>
                     <option value="Baggage Damage">Baggage Damage</option>
                     <option value="Baggage Loss">Baggage Loss</option>
                     <option value="Flight Delay">Flight Delay</option>
                     <option value="Flight Cancellation">Flight Cancellation</option>
-                    <option value="Payment Error">Payment Error</option>
                     <option value="Voluntary Cancellation">Voluntary Cancellation</option>
                     <option value="Service Complaint">Service Complaint</option>
                 </select>
@@ -30,8 +36,9 @@
         </div>
         <div class="row">
             <div class="form-group col-5">
-                <label asp-for="Airline" class="control-label"></label><br>
+                <label asp-for="Airline" class="control-label">Airline *</label><br>
                 <select asp-for="Airline" class="form-control btn-primary">
+                    <option value=""> Select Option</option>
                     <option value="Fast Fly">Fast Fly</option>
                     <option value="Safe Ways">Safe Ways</option>
                     <option value="Quick Travels">Quick Travels</option>
@@ -42,55 +49,55 @@
                 <span asp-validation-for="Airline" class="text-danger"></span>
             </div>
             <div class="form-group col-5">
-                <label class="control-label"> Flight Number</label>
-                <input asp-for="FlightNumber" class="form-control" />
+                <label class="control-label"> Flight Number *</label>
+                <input id="flt-number" asp-for="FlightNumber" class="form-control" />
                 <span asp-validation-for="FlightNumber" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="form-group col-5">
-                <label class="control-label">Departure Airport</label>
-                <input asp-for="DepartureAirport" class="form-control" />
+                <label class="control-label">Departure Airport *</label>
+                <input id="departure" asp-for="DepartureAirport" class="form-control" />
                 <span asp-validation-for="DepartureAirport" class="text-danger"></span>
             </div>
             <div class="form-group col-5">
-                <label class="control-label">Arrival Airport</label>
-                <input asp-for="ArrivalAirport" class="form-control" />
+                <label class="control-label">Arrival Airport *</label>
+                <input id="arrival" asp-for="ArrivalAirport" class="form-control" />
                 <span asp-validation-for="ArrivalAirport" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="form-group col-5">
-                <label class="control-label">Flight Date</label>
+                <label class="control-label">Flight Date *</label>
                 <input asp-for="FlightDate" type="date" class="form-control" />
                 <span asp-validation-for="FlightDate" class="text-danger"></span>
             </div>
             <div class="form-group col-5">
-                <label class="control-label"> Boarding Pass Image</label><br>
+                <label class="control-label">Boarding Pass Image *</label><br>
                 <input type="file" asp-for="BPImage">
-                <span asp-validation-for="BPImage"class="text-danger"></span>
+                <span asp-validation-for="BPImage" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="form-group col-3">
-                *<a href="https://www.iso.org/obp/ui/#search/code/" target="_blank">ISO (Alpha-2) Country Code</a>
+                <a href="https://www.iso.org/obp/ui/#search/code/" target="_blank">ISO (Alpha-2) Country Code *</a>
                 <input asp-for="CountryCode" class="form-control" style="margin-top: 8px;" />
                 <span asp-validation-for="CountryCode" class="text-danger"></span>
             </div>
             <div class="form-group col-5">
-                <label class="control-label">Phone Number</label>
+                <label class="control-label">Phone Number *</label>
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Description" class="control-label"></label>
+            <label asp-for="Description" class="control-label">Description *</label>
             <textarea asp-for="Description" placeholder="Your message..." class="form-control" style="height:180px;"></textarea>
             Maximum length of 500 characters.<br>
             <span asp-validation-for="Description" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-primary" />
+            <input id="submit" type="submit" value="Create" class="btn btn-primary" />
         </div>
     </form>
 </div>

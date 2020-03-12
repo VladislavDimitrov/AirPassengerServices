@@ -48,9 +48,61 @@ namespace Service
             return claimDto;
         }
 
-        public async Task UpdateAsync(ClaimDto claimDto)
+        public async Task<List<ClaimDto>> GetClaimsByUserAsync(User user)
         {
-            var claim = mapper.Map<Claim>(claimDto);
+            var claims = await context.Claims
+                .Where(c => c.User == user)
+                .Include(c => c.User)
+                .ToListAsync();
+            var claimDtos = mapper.Map<List<ClaimDto>>(claims);
+
+            return claimDtos;
+        }
+
+        public async Task<List<ClaimDto>> Get20LatestClaimsAsync()
+        {
+            var claims = await context.Claims
+                .OrderByDescending(c => c.CreatedAt)
+                .Take(20)
+                .Include(c => c.User)
+                .ToListAsync();
+            var claimDtos = mapper.Map<List<ClaimDto>>(claims);
+
+            return claimDtos;
+        }
+
+        public async Task<List<ClaimDto>> FilterByMultipleCriteriaAsync(string airline, int flightNumber, DateTime from, DateTime to)
+        {
+            if (to != default)
+                to = to.AddHours(23.59).AddSeconds(59);
+
+            var claims = await context.Claims
+                .Include(c => c.User)
+                .Where(c => (airline == null || c.Airline == airline)
+                && (flightNumber == default || c.FlightNumber == flightNumber)
+                && (from == default || c.CreatedAt >= from)
+                && (to == default || c.CreatedAt <= to))
+                .OrderByDescending(c => c.CreatedAt)
+                .ToListAsync();
+
+            var claimDtos = mapper.Map<List<ClaimDto>>(claims);
+
+            return claimDtos;
+        }
+
+        public async Task<ClaimDto> UpdateAsync(ClaimDto claimDto)
+        {
+            var claim = await context.Claims.Include(c => c.User).FirstOrDefaultAsync(c => c.Id == claimDto.Id);
+            claim.Airline = claimDto.Airline;
+            claim.ArrivalAirport = claimDto.ArrivalAirport;
+            claim.Category = claimDto.Category;
+            claim.CountryCode = claimDto.CountryCode;
+            claim.DepartureAirport = claimDto.DepartureAirport;
+            claim.Description = claimDto.Description;
+            claim.FlightDate = claimDto.FlightDate;
+            claim.FlightNumber = claimDto.FlightNumber;
+            claim.PhoneNumber = claimDto.PhoneNumber;
+            claim.Title = claimDto.Title;
             if (claimDto.BPImage != null)
             {
                 using (var ms = new MemoryStream())
@@ -63,32 +115,9 @@ namespace Service
 
             context.Claims.Update(claim);
             await context.SaveChangesAsync();
-        }
+            var claimDtoResult = mapper.Map<ClaimDto>(claim);
 
-        public async Task<List<ClaimDto>> Get20LatestClaimsAsync()
-        {
-            var claims = await context.Claims
-                .OrderByDescending(c => c.CreatedAt)
-                .Take(20).Include(c => c.User)
-                .ToListAsync();
-            var claimDtos = mapper.Map<List<ClaimDto>>(claims);
-
-            return claimDtos;
-        }
-
-        public async Task<List<ClaimDto>> FilterByMultipleCriteriaAsync(string airline, int flightNumber, DateTime from, DateTime to)
-        {
-            var claims = await context.Claims
-                .Include(c => c.User)
-                .Where(c => (airline == null || c.Airline.Contains(airline)
-                && (flightNumber == default || c.FlightNumber == flightNumber)
-                && (from == default || c.CreatedAt >= from)
-                && (to == default || c.CreatedAt <= to)))
-                .ToListAsync();
-
-            var claimDtos = mapper.Map<List<ClaimDto>>(claims);
-
-            return claimDtos;
+            return claimDtoResult;
         }
     }
 }

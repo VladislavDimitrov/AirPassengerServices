@@ -1,0 +1,54 @@
+﻿@model ManageUsersViewModel
+@{
+    ViewData["Title"] = "ManageUsers";
+}
+
+<div class="container">
+<h3>Manage Users</h3>
+    <br>
+    <form asp-controller="Admin" asp-action="ManageUsers" method="get">
+        <div class="row">
+            <input class="form-control col-md-4" placeholder="User name..." type="text" asp-for="Input" />
+            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+        </div>
+    </form>
+    <br>
+    @if (Model != null)
+    {
+        <div>
+            <p>Search Results</p>
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            @if (!(Model.Users.Count == 0))
+            {
+
+                <table id="the-clicking-table" class="table table-hover col-md-10">
+                    <tr style="background-color:lightblue">
+                        <th>Name</th>
+                        <th>Role</th>
+                    </tr>
+
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td>@user.Name</td>
+                            <td id="@user.Id">@user.Role</td>
+                            @if (user.Role == "Administrator")
+                            {
+                                <td>
+                                    <button type="submit" class="btn demote btn-primary" data-url="/Admin/Demote" data-userid="@user.Id">Demeote</button>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <button type="submit" class="btn promote btn-primary" data-url="/Admin/Promote" data-userid="@user.Id">Promote</button>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </table>
+            }
+        </div>
+    }
+</div>

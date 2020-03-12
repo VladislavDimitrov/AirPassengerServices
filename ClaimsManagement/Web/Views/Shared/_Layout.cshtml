@@ -4,8 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Web</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/css/DropDown.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -28,7 +30,10 @@
                         @if (this.User.IsInRole("Administrator"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Claims" asp-action="Reporting">Reporting</a>
+                                <a class="nav-link text-dark" asp-controller="Admin" asp-action="Reporting">Reporting</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Admin" asp-action="ManageUsers">Manage Users</a>
                             </li>
                         }
                     </ul>
@@ -36,21 +41,26 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container holder">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    @*<footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2020 - Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>*@
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/ClaimDeatilsScripts.js" asp-append-version="true"></script>
+    <script src="~/js/ClaimDetails.js"></script>
+    <script src="~/js/ManageUsers.js"></script>
+    <script src="~/js/CreateClaim.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
